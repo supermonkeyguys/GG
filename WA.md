@@ -691,3 +691,106 @@ int main()
 }
 ```
 
+
+
+## [数值膨胀之美](https://ac.nowcoder.com/acm/contest/95323/M)
+
+```c++
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int N = 1e5 + 10;
+typedef pair<int,int>pp;
+
+pp a[N];
+int b[N];
+
+int main()
+{
+    int n;
+    cin >> n;
+
+    for(int i = 1 ; i <= n ; i ++ ){
+        cin >> a[i].first;
+        a[i].second = i;
+        b[i] = a[i].first;
+    }
+
+    sort(a + 1,a + 1 + n);
+    a[n + 1].first = 0x3f3f3f3f;
+    //最小值的编号 最大值的编号
+    int l = a[1].second , r = a[1].second;
+
+    int mx = max(a[1].first * 2,a[n].first);
+
+    int res = mx - min(a[1].first * 2,a[2].first);
+
+    for(int i = 2 ; i <= n ; i ++ ){
+        while(l > a[i].second){
+            l -- ;
+            mx = max(mx,b[l] * 2);
+        }
+        while(r < a[i].second){
+            r ++ ;
+            mx = max(mx,b[r] * 2);
+        }
+
+        res = min(res,mx - min(a[1].first * 2,a[i + 1].first));
+
+    }
+
+    cout << res << endl;
+
+    return 0;
+}
+```
+
+
+
+## [一气贯通之刃](https://ac.nowcoder.com/acm/contest/95323/B)
+
+```c++
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int>q(n + 1);
+
+    for(int i = 0 ; i < n - 1 ; i ++ ){
+        int a,b;
+        cin >> a >> b;
+        q[a] ++ ;
+        q[b] ++ ;
+    }
+
+    int cnt =  0;
+    int head , tail;
+    for(int i = 1 ; i <= n ; i ++ ){
+        if(q[i] == 1){
+            cnt ++ ;
+            if(cnt == 1)head = i;
+            else if(cnt == 2) tail = i;
+        }
+        else if(q[i] > 2){
+            cout << -1 << endl;
+            return 0;
+        }
+    }
+
+    cout << head << ' ' << tail << endl;
+
+    return 0;
+}
+//欧拉图结论
+//对于一个无向图
+//遍历所有点的最简单路径
+//必须保证 每个点的度数(每个点连的条线个数)
+//奇数点只能有0个 或者 2个(起点和终点)
+//中间点的度数 只能是偶数2( 一进一出 -- 最简单路径)
+//如果为奇数(假如3) 那就代表除一进一出外 还有一条边 构成了一个环
+```
+
